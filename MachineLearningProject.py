@@ -97,65 +97,77 @@ X_train, X_validation, Y_train, Y_validation = train_test_split(
     X, Y, test_size=0.20, random_state=1
 )
 
-# Spot Check Algorithims
-
-models = []
-
-models.append(("LR", LogisticRegression(max_iter=1000)))
-models.append(("LDA", LinearDiscriminantAnalysis()))
-models.append(("KNN", KNeighborsClassifier()))
-models.append(("CART", DecisionTreeClassifier()))
-models.append(("NB", GaussianNB()))
-models.append(("SVM", SVC(gamma="auto")))
-
-# Evaluate each model in run
-
-results = []
-names = []
-topResult = 0.0
-topResultName = ""
-
-for name, model in models:
-    kFold = StratifiedKFold(n_splits=10, random_state=1, shuffle=True)
-    cv_result = cross_val_score(model, X_train, Y_train, cv=kFold, scoring="accuracy")
-    if cv_result.mean() > topResult:
-        topResult = cv_result.mean()
-        topResultName = name
-    results.append(cv_result)
-    names.append(name)
-    print("%s: %f (%f)" % (name, cv_result.mean(), cv_result.std()))
-print("-------------------------------------")
-print()
-print(f"{name} is the top model with {topResult.mean():.2f}% accuracy!!")
-print()
-print("-------------------------------------")
-
-# Compare Algorithims
-
-plt.boxplot(results, tick_labels=names)
-plt.title("Algorithim Comparison")
-plt.show()
-
-# Make predictions on validation dataset
-
-model = SVC(gamma="auto")
-model.fit(X_train, Y_train)
-predictions = model.predict(X_validation)
-
-# save the model to disk
 filename = "Finalized_model.sav"
-pickle.dump(model, open(filename, "wb"))
 
-# Evaluate predictions
-
-print(accuracy_score(Y_validation, predictions))
-print(confusion_matrix(Y_validation, predictions))
-print(classification_report(Y_validation, predictions))
-
-# load the model from disk
 loaded_model = pickle.load(open(filename, "rb"))
-resultFromPickle = loaded_model.score(X_validation, Y_validation)
-print(resultFromPickle)
+
+if loaded_model:
+
+    # load the model from disk
+    resultFromPickle = loaded_model.score(X_validation, Y_validation)
+    predictions = loaded_model.predict(X_validation)
+    print(resultFromPickle)
+    print(confusion_matrix(Y_validation, predictions))
+    print(classification_report(Y_validation, predictions))
+else:
+
+    # Spot Check Algorithims
+
+    models = []
+
+    models.append(("LR", LogisticRegression(max_iter=1000)))
+    models.append(("LDA", LinearDiscriminantAnalysis()))
+    models.append(("KNN", KNeighborsClassifier()))
+    models.append(("CART", DecisionTreeClassifier()))
+    models.append(("NB", GaussianNB()))
+    models.append(("SVM", SVC(gamma="auto")))
+
+    # Evaluate each model in run
+
+    results = []
+    names = []
+    topResult = 0.0
+    topResultName = ""
+
+    for name, model in models:
+        kFold = StratifiedKFold(n_splits=10, random_state=1, shuffle=True)
+        cv_result = cross_val_score(
+            model, X_train, Y_train, cv=kFold, scoring="accuracy"
+        )
+        if cv_result.mean() > topResult:
+            topResult = cv_result.mean()
+            topResultName = name
+        results.append(cv_result)
+        names.append(name)
+        print("%s: %f (%f)" % (name, cv_result.mean(), cv_result.std()))
+    print("-------------------------------------")
+    print()
+    print(f"{name} is the top model with {topResult.mean():.2f}% accuracy!!")
+    print()
+    print("-------------------------------------")
+
+    # Compare Algorithims
+
+    plt.boxplot(results, tick_labels=names)
+    plt.title("Algorithim Comparison")
+    plt.show()
+
+    # Make predictions on validation dataset
+
+    model = SVC(gamma="auto")
+    model.fit(X_train, Y_train)
+    predictions = model.predict(X_validation)
+
+    # save the model to disk
+    # filename = "Finalized_model.sav"
+    pickle.dump(model, open(filename, "wb"))
+
+    # Evaluate predictions
+
+    print(accuracy_score(Y_validation, predictions))
+    print(confusion_matrix(Y_validation, predictions))
+    print(classification_report(Y_validation, predictions))
+
 
 # help(“FunctionName”) help syntax in Python to learn about all of the functions that you’re using.
 
