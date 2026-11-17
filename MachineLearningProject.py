@@ -1,6 +1,7 @@
 # hello
 
 print("-------------------------------------")
+
 import os
 
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
@@ -74,8 +75,6 @@ print("-------------------------------------")
 # class distribution
 print(dataset.groupby("class").size())
 
-print("-------------------------------------")
-
 # box and whisker plots
 dataset.plot(kind="box", subplots=True, layout=(2, 2), sharex=False, sharey=False)
 plt.show()
@@ -97,12 +96,14 @@ X_train, X_validation, Y_train, Y_validation = train_test_split(
     X, Y, test_size=0.20, random_state=1
 )
 
-filename = "Finalized_model.sav"
+filename = "Finalized_model_test.sav"
 
-loaded_model = pickle.load(open(filename, "rb"))
-
-if loaded_model:
-
+if os.path.exists(filename):
+    print("-------------------------------------\n")
+    print(f"File Found. loading {filename}.")
+    print("\n-------------------------------------")
+    with open(filename, "rb") as f:
+        loaded_model = pickle.load(f)
     # load the model from disk
     resultFromPickle = loaded_model.score(X_validation, Y_validation)
     predictions = loaded_model.predict(X_validation)
@@ -110,6 +111,10 @@ if loaded_model:
     print(confusion_matrix(Y_validation, predictions))
     print(classification_report(Y_validation, predictions))
 else:
+
+    print("-------------------------------------\n")
+    print("File Not Found.")
+    print("\n-------------------------------------")
 
     # Spot Check Algorithims
 
