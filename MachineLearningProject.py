@@ -1,5 +1,6 @@
 # hello
 
+print("-------------------------------------")
 # scripy
 import scipy
 
@@ -46,21 +47,29 @@ from sklearn.svm import SVC
 
 # load dataset
 url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
-names = ["sepal-length", "sepal-width", "petal-length", "petal-width", "class"]
-dataset = read_csv(url, names=names)
+collums = ["sepal-length", "sepal-width", "petal-length", "petal-width", "class"]
+dataset = read_csv(url, names=collums)
+
+print("-------------------------------------")
 
 # shape
 print(dataset.shape)
 
+print("-------------------------------------")
+
 # head
 print(dataset.head(20))
 
+print("-------------------------------------")
+
 # descriptions
 print(dataset.describe())
+print("-------------------------------------")
 
 # class distribution
 print(dataset.groupby("class").size())
 
+print("-------------------------------------")
 
 # box and whisker plots
 dataset.plot(kind="box", subplots=True, layout=(2, 2), sharex=False, sharey=False)
@@ -73,5 +82,44 @@ plt.show()
 # scatter plot matrix
 scatter_matrix(dataset)
 plt.show()
+
+# Split-Out validation dataset
+array = dataset.values
+X = array[:, 0:4]
+Y = array[:, 4]
+
+X_train, X_validation, Y_train, Y_validation = train_test_split(
+    X, Y, test_size=0.20, random_state=1
+)
+
+# Spot Check Algorithims
+
+models = []
+
+models.append(("LR", LogisticRegression(max_iter=1000)))
+models.append(("LDA", LinearDiscriminantAnalysis()))
+models.append(("KNN", KNeighborsClassifier()))
+models.append(("CART", DecisionTreeClassifier()))
+models.append(("NB", GaussianNB()))
+models.append(("SVM", SVC(gamma="auto")))
+
+# Evaluate each model in run
+
+results = []
+names = []
+topResult = 0.0
+topResultName = ""
+
+for name, model in models:
+    kFold = StratifiedKFold(n_splits=10, random_state=1, shuffle=True)
+    cv_result = cross_val_score(model, X_train, Y_train, cv=kFold, scoring="accuracy")
+    if cv_result.mean() > topResult:
+        topResult = cv_result.mean()
+        topResultName = name
+    results.append(cv_result)
+    names.append(name)
+    print("%s: %f (%f)" % (name, cv_result.mean(), cv_result.std()))
+print("-------------------------------------")
+print(f"{name} is the top result with {topResult.mean():.2f}% accuracy!!")
 
 print("Done!")
