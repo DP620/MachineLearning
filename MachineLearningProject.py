@@ -120,6 +120,6 @@ for name, model in models:
     names.append(name)
     print("%s: %f (%f)" % (name, cv_result.mean(), cv_result.std()))
 print("-------------------------------------")
-print(f"{name} is the top result with {topResult.mean():.2f}% accuracy!!")
+print(f"{name} is the top model with {topResult.mean():.2f}% accuracy!!")
 
 print("Done!")
