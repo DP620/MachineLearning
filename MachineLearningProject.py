@@ -1,31 +1,36 @@
-#hello
+# hello
 
-#scripy
+# scripy
 import scipy
-print('scipy: {}'.format(scipy.__version__))
+
+print("scipy: {}".format(scipy.__version__))
 
 # numpy
 import numpy
-print('numpy: {}'.format(numpy.__version__))
 
-#matplotlib
+print("numpy: {}".format(numpy.__version__))
+
+# matplotlib
 import matplotlib
-print('matplotlib: {}'.format(matplotlib.__version__))
 
-#pandas
+print("matplotlib: {}".format(matplotlib.__version__))
+
+# pandas
 import pandas
-print('pandas: {}'.format(pandas.__version__))
+
+print("pandas: {}".format(pandas.__version__))
 
 # scikit-learn
 import sklearn
-print('sklearn: {}'.format(sklearn.__version__))
+
+print("sklearn: {}".format(sklearn.__version__))
 
 
-#load libraries 
+# load libraries
 
-from pandas import read_csv #<-- resposible for reading data
-from pandas.plotting import scatter_matrix #<--
-from matplotlib import pyplot as plt #<--
+from pandas import read_csv  # <-- resposible for reading data
+from pandas.plotting import scatter_matrix  # <--
+from matplotlib import pyplot as plt  # <--
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedKFold
@@ -39,26 +44,26 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
-#load dataset
+# load dataset
 url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
-names = ['sepal-length', 'sepal-width', 'petal-length', 'petal-width', 'class']
+names = ["sepal-length", "sepal-width", "petal-length", "petal-width", "class"]
 dataset = read_csv(url, names=names)
 
-#shape
+# shape
 print(dataset.shape)
 
-#head
+# head
 print(dataset.head(20))
 
-#descriptions
+# descriptions
 print(dataset.describe())
 
-#class distribution
-print(dataset.groupby('class').size())
+# class distribution
+print(dataset.groupby("class").size())
 
 
 # box and whisker plots
-dataset.plot(kind='box', subplots=True, layout=(2,2), sharex=False, sharey=False)
+dataset.plot(kind="box", subplots=True, layout=(2, 2), sharex=False, sharey=False)
 plt.show()
 
 # histograms
@@ -69,3 +74,4 @@ plt.show()
 scatter_matrix(dataset)
 plt.show()
 
+print("Done!")
